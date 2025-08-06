@@ -60,7 +60,8 @@ const SignIn = ({ onNavigate }) => {
       placeholder: 'Enter your email',
       value: formData.email,
       onChange: handleInputChange('email'),
-      required: true
+      required: true,
+      className: 'py-1 px-2 text-sm' //  smaller padding & font
     },
     {
       name: 'password',
@@ -69,12 +70,13 @@ const SignIn = ({ onNavigate }) => {
       placeholder: 'Enter your password',
       value: formData.password,
       onChange: handleInputChange('password'),
-      required: true
+      required: true,
+      className: 'py-1 px-2 text-sm' //  smaller padding & font
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
+    <div className=" min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
       <Header onNavigate={onNavigate} />
       
       <main className="flex-1 flex items-center justify-center px-4 py-16">

@@ -23,9 +23,9 @@ const Input = ({
         value={value}
         onChange={onChange}
         required={required}
-        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-4 focus:ring-indigo-200 focus:border-indigo-600 transition-all duration-200 ${
-          error ? 'border-red-500 focus:ring-red-200 focus:border-red-500' : 'border-gray-300'
-        }`}
+       className={`w-full border focus:outline-none   focus:border-indigo-600 transition-all duration-200 ${
+    error ? 'border-red-500 focus:ring-red-200 focus:border-red-500' : 'border-gray-300'
+  } ${className}`}
       />
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>

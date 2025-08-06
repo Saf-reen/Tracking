@@ -9,18 +9,18 @@ const Button = ({
   disabled = false,
   className = '' 
 }) => {
-  const baseClasses = 'font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-4';
+  const baseClasses = 'font-semibold  transition-all duration-200 focus:outline-none ';
   
   const variants = {
-    primary: 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-200',
-    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-100',
-    outline: 'border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 focus:ring-indigo-200'
+    primary: 'bg-green-600 hover:bg-green-700 text-white ',
+    secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800 ',
+    outline: 'border-2 border-green-600 text-green-600 hover:bg-green-50'
   };
   
   const sizes = {
-    sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg'
+    sm: 'px-4 py-1 text-sm',
+    md: 'px-4 py-1 text-base',
+    lg: 'px-4 py-1 text-lg'
   };
   
   const disabledClasses = disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
@@ -30,7 +30,7 @@ const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${disabledClasses} ${className}`}
+      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${disabledClasses} ${className} `}
     >
       {children}
     </button>

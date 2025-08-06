@@ -13,12 +13,12 @@ const Home = ({ onNavigate }) => {
           {/* Hero Section */}
           <div className="mb-12">
             <div className="flex items-center justify-center mb-6">
-              <div className="w-20 h-20 bg-transparent border border-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className=" text-emerald-600 font-bold text-4xl">₹</span>
+              <div className="w-20 h-20 bg-transparent border border-green-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className=" text-green-600 font-bold text-4xl">₹</span>
               </div>
             </div>
             <h1 className="text-5xl sm:text-6xl font-bold text-gray-800 mb-6">
-              Track<span className="text-[#687a6c]">Budget</span>
+              Track<span className="text-green-600">Budget</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Smart way to track your expenses! Take control of your finances with our intuitive budget tracking app.
@@ -56,7 +56,7 @@ const Home = ({ onNavigate }) => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button 
               size="lg" 
-              className="w-full sm:w-auto min-w-[200px]"
+              className="w-full sm:w-auto min-w-[200px] border-2 border-green-600"
               onClick={() => onNavigate('signup')}
             >
               Get Started Free

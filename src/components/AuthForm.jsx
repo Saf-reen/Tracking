@@ -12,11 +12,11 @@ const AuthForm = ({
   errors = {}
 }) => {
   return (
-    <Card className="p-8 max-w-md mx-auto">
+    <Card className="p-8 w-1/4 mx-auto">
       <div className="text-center mb-6">
         <div className="flex items-center justify-center mb-4">
-          <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-2xl">$</span>
+          <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+            <span className="text-white font-bold text-2xl">₹</span>
           </div>
         </div>
         <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
@@ -32,13 +32,14 @@ const AuthForm = ({
           />
         ))}
         
-        <Button 
+        <div className="max-w-md flex flex-row justify-center mx-auto"><Button 
           type="submit" 
-          className="w-full"
+          className="max-w-md"
           size="lg"
         >
           {submitText}
         </Button>
+        </div>
       </form>
       
       {switchText && (
@@ -47,7 +48,7 @@ const AuthForm = ({
             {switchText.text}{' '}
             <button
               onClick={switchAction}
-              className="text-indigo-600 hover:text-indigo-700 font-semibold transition-colors duration-200"
+              className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-200"
             >
               {switchText.action}
             </button>
