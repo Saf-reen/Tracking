@@ -28,24 +28,24 @@ const Home = ({ onNavigate }) => {
           {/* Features */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <Card className="p-6 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-indigo-600 text-2xl">📊</span>
+              <div className="w-12 h-12  rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-green-600 text-2xl">📊</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Track Expenses</h3>
               <p className="text-gray-600">Monitor your daily expenses and categorize your spending habits.</p>
             </Card>
             
             <Card className="p-6 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-indigo-600 text-2xl">💰</span>
+              <div className="w-12 h-12  rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-green-600 text-2xl">💰</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Set Budgets</h3>
               <p className="text-gray-600">Create monthly budgets and stay within your financial limits.</p>
             </Card>
             
             <Card className="p-6 hover:shadow-xl transition-all duration-300">
-              <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <span className="text-indigo-600 text-2xl">📈</span>
+              <div className="w-12 h-12  rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-green-600 text-2xl">📈</span>
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Analyze Trends</h3>
               <p className="text-gray-600">Get insights into your spending patterns and financial trends.</p>

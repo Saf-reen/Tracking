@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AuthForm from '../components/AuthForm';
-import Card from '../components/Card';
 
 const SignIn = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
@@ -61,7 +60,7 @@ const SignIn = ({ onNavigate }) => {
       value: formData.email,
       onChange: handleInputChange('email'),
       required: true,
-      className: 'py-1 px-2 text-sm' //  smaller padding & font
+      className: 'py-2 px-3 text-sm'
     },
     {
       name: 'password',
@@ -71,15 +70,15 @@ const SignIn = ({ onNavigate }) => {
       value: formData.password,
       onChange: handleInputChange('password'),
       required: true,
-      className: 'py-1 px-2 text-sm' //  smaller padding & font
+      className: 'py-2 px-3 text-sm'
     }
   ];
 
   return (
-    <div className=" min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
       <Header onNavigate={onNavigate} />
       
-      <main className="flex-1 flex items-center justify-center px-4 py-16">
+      <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
         <AuthForm
           title="Welcome Back"
           fields={fields}

@@ -12,7 +12,7 @@ const AuthForm = ({
   errors = {}
 }) => {
   return (
-    <Card className="p-8 w-1/4 mx-auto">
+    <Card className="p-6 sm:p-8 w-full max-w-md mx-auto">
       <div className="text-center mb-6">
         <div className="flex items-center justify-center mb-4">
           <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
@@ -32,9 +32,9 @@ const AuthForm = ({
           />
         ))}
         
-        <div className="max-w-md flex flex-row justify-center mx-auto"><Button 
+        <div className="flex justify-center"><Button 
           type="submit" 
-          className="max-w-md"
+          className="w-full sm:w-auto"
           size="lg"
         >
           {submitText}
