@@ -34,7 +34,7 @@ const Dashboard = () => {
         isAuthenticated={true}
       />
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Header showNav={true} isAuthenticated={true}/>
+  <Header showNav={true} isAuthenticated={true} toggleSidebar={toggleSidebar}/>
       
       <div className="max-w-6xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
         {/* Dashboard Header */}

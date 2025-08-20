@@ -5,7 +5,7 @@ import AuthForm from '../../components/AuthForm';
 import Card from '../../components/Card';
 import { useNavigate } from 'react-router-dom';
 
-const ForgotPassword = ({ onNavigate }) => {
+const ForgotPassword = () => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: ''
@@ -50,7 +50,7 @@ const ForgotPassword = ({ onNavigate }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         // Navigate to enter OTP page with email
-        onNavigate('enter-otp', { email: formData.email });
+        navigate('/enter-otp');
       }, 1500);
     } else {
       setErrors(newErrors);
@@ -72,7 +72,7 @@ const ForgotPassword = ({ onNavigate }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
-      <Header onNavigate={onNavigate} />
+  <Header />
       
       <main className="flex items-center justify-center flex-1 px-4 py-12 sm:py-16">
         <div className="w-full max-w-md">
@@ -85,7 +85,7 @@ const ForgotPassword = ({ onNavigate }) => {
               text: "Remember your password?",
               action: "Back to Sign In"
             }}
-            switchAction={() => navigate('signin')}
+            switchAction={() => navigate('/signin')}
             errors={errors}
           />
           

@@ -1,18 +1,31 @@
-// Header.js - Updated to use Auth Context
+// Header.js - Updated to use Auth Context and full width
 import React, { useState, useEffect, useRef } from 'react';
+import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux"; 
+import { useSelector } from "react-redux";
 import { useAuth } from './AuthContext'; // Import the auth context
 
-const Header = ({ showNav = false }) => {
-  const muser=useSelector((state)=>state.auth.user);
+const Header = ({ showNav = false, toggleSidebar }) => {
+  const muser = useSelector((state) => state.auth.user);
   console.log(muser);
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  
+
   // Get auth state from context
   const { isAuthenticated, user, logout } = useAuth();
+
+  // Fallback to localStorage if user is not present in context
+  const localUser = (() => {
+    try {
+      const data = localStorage.getItem('userData');
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const displayUser = user || localUser;
 
   const handleSignOut = () => {
     logout(); // Use context logout function
@@ -27,7 +40,6 @@ const Header = ({ showNav = false }) => {
         setIsDropdownOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
@@ -41,16 +53,25 @@ const Header = ({ showNav = false }) => {
   };
 
   return (
-    <header className="bg-white border-b shadow-sm">
-      <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            <div className="flex items-center justify-center w-8 h-8 mr-3 bg-transparent border border-green-600 rounded-lg">
-              <span className="text-lg font-bold text-green-600">₹</span>
+    <header className="w-full bg-white border-b shadow-sm"> {/* Changed w-100 to w-full */}
+      <div className="w-full px-4 mx-auto max-w-7xl sm:px-6 lg:px-8"> {/* Added w-full */}
+        <div className="flex flex-row justify-between w-full h-16"> {/* Added w-full */}
+          <div className="flex items-center">
+            <button
+              className="p-2 mr-2 border rounded-lg md:hidden"
+              onClick={toggleSidebar}
+              aria-label="Toggle Sidebar"
+            >
+              <X size={24} />
+            </button>
+            <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
+              <div className="flex items-center justify-center w-8 h-8 mr-3 bg-transparent border border-green-600 rounded-lg">
+                <span className="text-lg font-bold text-green-600">₹</span>
+              </div>
+              <span className="text-xl font-bold text-gray-800">TrackBudget</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">TrackBudget</span>
           </div>
-          
+
           {/* Navigation can be uncommented when needed */}
           {/* {showNav && isAuthenticated && (
             <nav className="hidden space-x-8 md:flex">
@@ -65,40 +86,39 @@ const Header = ({ showNav = false }) => {
               </button>
             </nav>
           )} */}
-          
-          <div className="flex items-center space-x-4">
+
+          <div className="flex items-end">
             {isAuthenticated ? (
               // Show profile dropdown when authenticated
               <div className="relative" ref={dropdownRef}>
-                <button 
+                <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="flex items-center px-3 py-2 space-x-2 text-sm font-medium text-gray-700 transition-colors bg-gray-100 border border-gray-300 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
                   <div className="flex items-center justify-center w-8 h-8 text-sm font-semibold text-white bg-green-600 rounded-full">
-                    {getUserInitials(user?.email)}
+                    {getUserInitials(displayUser?.email)}
                   </div>
                   <span className="hidden truncate sm:block max-w-24">
-                    {user?.email ? user.email.split('@')[0] : user?.name || 'User'}
+                    {displayUser?.email ? displayUser.email.split('@')[0] : displayUser?.name || 'User'}
                   </span>
-                  <svg 
-                    className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-
                 {/* Dropdown Menu */}
                 {isDropdownOpen && (
                   <div className="absolute right-0 z-50 w-48 mt-2 bg-white border border-gray-200 rounded-md shadow-lg">
                     <div className="py-1">
                       <div className="px-4 py-3 border-b border-gray-100">
                         <p className="text-sm font-medium text-gray-900">Signed in as</p>
-                        <p className="text-sm text-gray-600 truncate">{user?.email || 'user@example.com'}</p>
+                        <p className="text-sm text-gray-600 truncate">{displayUser?.email || 'user@example.com'}</p>
                       </div>
-                      
+
                       <button
                         onClick={() => {
                           setIsDropdownOpen(false);
@@ -111,9 +131,9 @@ const Header = ({ showNav = false }) => {
                         </svg>
                         Profile
                       </button>
-                      
+
                       <div className="border-t border-gray-100"></div>
-                      
+
                       <button
                         onClick={handleSignOut}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 transition-colors hover:bg-red-50"
@@ -129,14 +149,14 @@ const Header = ({ showNav = false }) => {
               </div>
             ) : (
               // Show sign in/up buttons when not authenticated
-              <div className="flex items-center space-x-4">
-                <button 
-                  onClick={() => navigate('/signin')} 
-                  className="font-medium text-gray-600 transition-colors hover:text-green-600"
+              <div className="flex items-center space-x-4 space-y-2">
+                <button
+                  onClick={() => navigate('/signin')}
+                  className="px-4 py-2 font-medium text-gray-600 transition-colors hover:text-green-600"
                 >
                   Sign In
                 </button>
-                <button 
+                <button
                   onClick={() => navigate('/signup')}
                   className="px-4 py-2 font-medium text-white transition-colors bg-green-600 rounded-md hover:bg-green-700"
                 >

@@ -11,7 +11,7 @@ const Dashboard = () => {
   console.log(navigate)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="w-screen min-h-screen bg-cover bg-gradient-to-br from-blue-50 to-indigo-100">
       <Header showNav={true} isAuthenticated={true}/>
       
       <div className="max-w-6xl px-4 py-12 mx-auto sm:px-6 lg:px-8">

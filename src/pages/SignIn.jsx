@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { useAuth } from '../components/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure } from '../redux/authSlice';
-import axiosInstance from '../utils/axiosInstance';
+import {axiosInstance} from '../utils/axiosInstance';
 // import { API_ENDPOINTS } from '../utils/api';
 import AuthForm from '../components/AuthForm';
 
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -39,17 +41,19 @@ const SignIn = () => {
       const response = await axiosInstance.post("/auth/login/", formData);
       const { access_token, user } = response.data;
       console.log(response.data);
-      dispatch(loginSuccess({ access_token, user }));
-      localStorage.setItem('access_token', access_token);
-      navigate('/dashboard');
-    } catch (error) {
-      dispatch(loginFailure(error.response?.data?.message || 'Login failed'));
-      setErrors({ general: error.response?.data?.message || 'Login failed' });
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  dispatch(loginSuccess({ access_token, user }));
+  localStorage.setItem('access_token', access_token);
+  localStorage.setItem('userData', JSON.stringify(user));
+  login(access_token, user);
+  navigate('/dashboard');
+        } catch (error) {
+          dispatch(loginFailure(error.response?.data?.message || 'Login failed'));
+          setErrors({ general: error.response?.data?.message || 'Login failed' });
+          console.log(error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
   const fields = [
     {

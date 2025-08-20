@@ -12,6 +12,9 @@ import Projects from './pages/Dashboard/Project';
 import Budgets from './pages/Dashboard/Budget';
 import ProjectBudgeting from './pages/ProjectingBudgeting/ProjectBudgeting';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import EnterOTP from "./pages/ForgotPassword/EnterOTP";
+import ResetPassword from './pages/ForgotPassword/ResetPassword';
+import Reset from './pages/Reset';
 
 const App = () => {
   return (
@@ -29,7 +32,10 @@ const App = () => {
             <Route path="/budgets" element={<Budgets />} />
             <Route path="*" element={<Navigate to="/" replace />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/enter-otp" element={<EnterOTP />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/project-budgeting" element={<ProjectBudgeting />} />
+            <Route path="/reset" element={<Reset />} />
           </Routes>
         </div>
       </Router>

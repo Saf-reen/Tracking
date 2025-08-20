@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext'; // Import the auth context
 import { useNavigate } from 'react-router-dom';
+import Reset from '../pages/Reset'; // Import the Reset modal component
 
 // Sidebar Component
-const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard', onNavigate }) => {
-    const navigate=useNavigate();
+const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard' }) => {
+  const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuth();
+  const [showResetModal, setShowResetModal] = useState(false);
+
   const getUserInitials = (email) => {
     if (!email) return 'U';
     return email.charAt(0).toUpperCase();
   };
+
   const menuItems = [
     {
       name: 'Dashboard',
@@ -52,18 +56,34 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard', onNavigate
   ];
 
   const handleNavigation = (path) => {
-    if (onNavigate) {
-      onNavigate(path);
-    }
+    navigate(path);
+    // Close sidebar on mobile after navigation
     if (window.innerWidth < 768) {
       toggleSidebar();
     }
   };
-    const handleLogout = () => {
-        logout(); // Use context logout function
-        // setIsDropdownOpen(false);
-        navigate('/');
-    };
+
+  const handleLogout = () => {
+    logout(); // Use context logout function
+    navigate('/');
+    // Close sidebar on mobile
+    if (window.innerWidth < 768) {
+      toggleSidebar();
+    }
+  };
+
+  const handleResetPassword = () => {
+    setShowResetModal(true);
+    // Close sidebar on mobile
+    if (window.innerWidth < 768) {
+      toggleSidebar();
+    }
+  };
+
+  const closeResetModal = () => {
+    setShowResetModal(false);
+  };
+
   return (
     <>
       {/* Mobile Overlay */}
@@ -76,7 +96,7 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard', onNavigate
       
       {/* Sidebar */}
       <div className={`
-        fixed top-0 left-0 z-50 h-full bg-white shadow-xl transform transition-transform duration-300 ease-out
+        fixed top-0 left-0 z-50 h-full bg-white shadow-xl transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         md:translate-x-0 md:static md:shadow-none md:border-r md:border-slate-200
         w-72 flex flex-col
@@ -85,16 +105,16 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard', onNavigate
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80">
           <div className="flex items-center space-x-3">
             <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            {/* <div className="flex items-center justify-center w-8 h-8 mr-3 bg-transparent border border-green-600 rounded-lg">
-              <span className="text-lg font-bold text-green-600">₹</span>
+              <div className="flex items-center justify-center w-8 h-8 mr-3 bg-transparent border border-green-600 rounded-lg">
+                <span className="text-lg font-bold text-green-600">₹</span>
+              </div>
+              <span className="text-xl font-bold text-gray-800">TrackBudget</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">TrackBudget</span> */}
-          </div>
           </div>
           {/* Close button for mobile */}
           <button
             onClick={toggleSidebar}
-            className="p-2 transition-colors rounded-lg hover:bg-slate-100"
+            className="p-2 transition-colors rounded-lg md:hidden hover:bg-slate-100"
           >
             <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -130,38 +150,29 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard', onNavigate
           ))}
         </nav>
 
-        {/* Additional Menu Section */}
-        {/* <div className="px-4 py-4 border-t border-slate-200/60">
-          <div className="space-y-1">
-            <button className="flex items-center w-full px-4 py-3 space-x-3 text-sm font-medium transition-colors rounded-lg text-slate-600 hover:bg-slate-50">
-              <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>Settings</span>
-            </button>
-            
-            <button className="flex items-center w-full px-4 py-3 space-x-3 text-sm font-medium transition-colors rounded-lg text-slate-600 hover:bg-slate-50">
-              <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>Help & Support</span>
-            </button>
-          </div>
-        </div> */}
-
         {/* User Section */}
         <div className="p-4 border-t border-slate-200/60 bg-slate-50/50">
           {/* User Info */}
           <div className="flex items-center p-3 mb-4 space-x-3 bg-white border shadow-sm rounded-xl border-slate-100">
             <div className="flex items-center justify-center w-8 h-8 text-sm font-semibold text-white bg-green-600 rounded-full">
-                    {getUserInitials(user?.email)}
+              {getUserInitials(user?.email)}
             </div>
             <span className="hidden truncate sm:block max-w-24">
-                {user?.email ? user.email.split('@')[0] : user?.name || 'User'}
+              {user?.email ? user.email.split('@')[0] : user?.name || 'User'}
             </span>
           </div>
-          
+
+          {/* Reset Password Button */}
+          <button
+            onClick={handleResetPassword}
+            className="flex items-center justify-center w-full px-4 py-3 mb-2 space-x-2 text-sm font-medium transition-all duration-200 border text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl border-slate-200 hover:border-blue-200"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 11v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Reset Password</span>
+          </button>
+
           {/* Logout Button */}
           <button
             onClick={handleLogout}
@@ -174,9 +185,13 @@ const Sidebar = ({ isOpen, toggleSidebar, currentPath = '/dashboard', onNavigate
           </button>
         </div>
       </div>
+
+      {/* Reset Password Modal */}
+      {showResetModal && (
+        <Reset onClose={closeResetModal} />
+      )}
     </>
   );
 };
-
 
 export default Sidebar;

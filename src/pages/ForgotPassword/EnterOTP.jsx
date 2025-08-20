@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Card from '../components/Card';
-import Button from '../components/Button';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import Card from '../../components/Card';
+import Button from '../../components/Button';
+import { useNavigate } from 'react-router-dom';
 
-const EnterOTP = ({ onNavigate, email }) => {
+const EnterOTP = ({ email }) => {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [timeLeft, setTimeLeft] = useState(900); // 15 minutes in seconds
   const [canResend, setCanResend] = useState(false);
   const inputRefs = useRef([]);
+  const navigate=useNavigate();
 
   // Timer effect
   useEffect(() => {
@@ -99,7 +101,7 @@ const EnterOTP = ({ onNavigate, email }) => {
       setTimeout(() => {
         setIsSubmitting(false);
         // Navigate to reset password with email
-        onNavigate('reset-password', { email });
+        navigate('/reset-password', { email });
       }, 1500);
     } else {
       setErrors(newErrors);
@@ -120,21 +122,21 @@ const EnterOTP = ({ onNavigate, email }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
-      <Header onNavigate={onNavigate} />
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+  <Header />
       
-      <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
-        <Card className="p-6 sm:p-8 w-full max-w-md mx-auto">
-          <div className="text-center mb-6">
+      <main className="flex items-center justify-center flex-1 px-4 py-12 sm:py-16">
+        <Card className="w-full max-w-md p-6 mx-auto sm:p-8">
+          <div className="mb-6 text-center">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+              <div className="flex items-center justify-center w-12 h-12 bg-green-600 rounded-xl">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
             </div>
             <h2 className="text-2xl font-bold text-gray-800">Enter Verification Code</h2>
-            <p className="text-gray-600 mt-2">
+            <p className="mt-2 text-gray-600">
               We've sent a 6-digit code to<br />
               <strong className="text-gray-800">{email}</strong>
             </p>
@@ -143,7 +145,7 @@ const EnterOTP = ({ onNavigate, email }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* OTP Input */}
             <div>
-              <div className="flex justify-center space-x-3 mb-4">
+              <div className="flex justify-center mb-4 space-x-3">
                 {otp.map((digit, index) => (
                   <input
                     key={index}
@@ -165,7 +167,7 @@ const EnterOTP = ({ onNavigate, email }) => {
               </div>
               
               {errors.otp && (
-                <p className="text-sm text-red-600 text-center">{errors.otp}</p>
+                <p className="text-sm text-center text-red-600">{errors.otp}</p>
               )}
             </div>
 
@@ -196,12 +198,12 @@ const EnterOTP = ({ onNavigate, email }) => {
           </form>
 
           {/* Resend Section */}
-          <div className="mt-6 text-center space-y-3">
+          <div className="mt-6 space-y-3 text-center">
             <p className="text-sm text-gray-600">
               Didn't receive the code?
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-3 justify-center text-sm">
+            <div className="flex flex-col justify-center gap-3 text-sm sm:flex-row">
               <button
                 onClick={handleResendOTP}
                 disabled={!canResend}
@@ -215,8 +217,8 @@ const EnterOTP = ({ onNavigate, email }) => {
               </button>
               
               <button
-                onClick={() => onNavigate('forgot-password')}
-                className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-200 border-l border-gray-300 pl-3"
+                onClick={() => navigate('/forgot-password')}
+                className="pl-3 font-semibold text-green-600 transition-colors duration-200 border-l border-gray-300 hover:text-green-700"
               >
                 Try Different Email
               </button>
@@ -226,8 +228,8 @@ const EnterOTP = ({ onNavigate, email }) => {
           {/* Back to Sign In */}
           <div className="mt-6 text-center">
             <button
-              onClick={() => onNavigate('signin')}
-              className="text-gray-600 hover:text-gray-700 transition-colors duration-200 text-sm"
+              onClick={() => navigate('/signin')}
+              className="text-sm text-gray-600 transition-colors duration-200 hover:text-gray-700"
             >
               ← Back to Sign In
             </button>
