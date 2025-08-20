@@ -2,14 +2,17 @@ import {React, useEffect} from 'react';
 import Input from './Input';
 import Button from './Button';
 import Card from './Card';
+
 const AuthForm = ({ 
-  title, 
+  title,
   fields, 
   onSubmit, 
   submitText, 
   switchText, 
   switchAction,
-  errors = {}
+  errors = {},
+  showForgotPassword = true,  // New prop
+  onForgotPassword            // New prop
 }) => {
   return (
     <Card className="p-6 sm:p-8 w-full max-w-md mx-auto">
@@ -32,13 +35,27 @@ const AuthForm = ({
           />
         ))}
         
-        <div className="flex justify-center"><Button 
-          type="submit" 
-          className="w-full sm:w-auto"
-          size="lg"
-        >
-          {submitText}
-        </Button>
+        {/* Add forgot password link here - appears after password field */}
+        {showForgotPassword && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={onForgotPassword}
+              className="text-green-600 hover:text-green-700 font-medium text-sm transition-colors duration-200"
+            >
+              Forgot your password?
+            </button>
+          </div>
+        )}
+        
+        <div className="flex justify-center">
+          <Button 
+            type="submit" 
+            className=""
+            size="lg"
+          >
+            {submitText}
+          </Button>
         </div>
       </form>
       

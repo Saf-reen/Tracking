@@ -14,7 +14,7 @@ const Input = ({
     <div className={`mb-4 ${className}`}>
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {label} {required && <span className="text-indigo-600">*</span>}
+          {label} {required && <span className="text-red-600">*</span>}
         </label>
       )}
       <input
@@ -23,7 +23,7 @@ const Input = ({
         value={value}
         onChange={onChange}
         required={required}
-       className={`w-full border focus:outline-none   focus:border-indigo-600 transition-all duration-200 ${
+       className={`w-full border p-2 focus:outline-none focus:border-indigo-600 transition-all duration-200 ${
     error ? 'border-red-500 focus:ring-red-200 focus:border-red-500' : 'border-gray-300'
   } ${className}`}
       />
