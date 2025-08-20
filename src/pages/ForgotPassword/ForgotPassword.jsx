@@ -3,8 +3,10 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import AuthForm from '../../components/AuthForm';
 import Card from '../../components/Card';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = ({ onNavigate }) => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: ''
   });
@@ -69,10 +71,10 @@ const ForgotPassword = ({ onNavigate }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
       <Header onNavigate={onNavigate} />
       
-      <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
+      <main className="flex items-center justify-center flex-1 px-4 py-12 sm:py-16">
         <div className="w-full max-w-md">
           <AuthForm
             title="Reset Password"
@@ -83,14 +85,14 @@ const ForgotPassword = ({ onNavigate }) => {
               text: "Remember your password?",
               action: "Back to Sign In"
             }}
-            switchAction={() => onNavigate('signin')}
+            switchAction={() => navigate('signin')}
             errors={errors}
           />
           
           {/* Additional help text */}
-          <Card className="mt-4 p-4">
+          <Card className="p-4 mt-4">
             <div className="text-center">
-              <p className="text-sm text-gray-600 leading-relaxed">
+              <p className="text-sm leading-relaxed text-gray-600">
                 Enter the email address associated with your TrackBudget account and we'll send you a verification code to reset your password.
               </p>
             </div>

@@ -1,4 +1,4 @@
-import {React, useEffect} from 'react';
+import React from 'react'; // Fixed import - React should be default import
 import Input from './Input';
 import Button from './Button';
 import Card from './Card';
@@ -11,19 +11,19 @@ const AuthForm = ({
   switchText, 
   switchAction,
   errors = {},
-  showForgotPassword = true,  // New prop
-  onForgotPassword            // New prop
+  showForgotPassword = false,  // Changed default to false
+  onForgotPassword            
 }) => {
   return (
-    <Card className="p-6 sm:p-8 w-full max-w-md mx-auto">
-      <div className="text-center mb-6">
+    <Card className="w-full max-w-md p-6 mx-auto sm:p-8">
+      <div className="mb-6 text-center">
         <div className="flex items-center justify-center mb-4">
-          <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
-            <span className="text-white font-bold text-2xl">₹</span>
+          <div className="flex items-center justify-center w-12 h-12 bg-green-600 rounded-xl">
+            <span className="text-2xl font-bold text-white">₹</span>
           </div>
         </div>
         <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
-        <p className="text-gray-600 mt-2">Smart way to track your expenses!</p>
+        <p className="mt-2 text-gray-600">Smart way to track your expenses!</p>
       </div>
       
       <form onSubmit={onSubmit} className="space-y-4">
@@ -35,13 +35,13 @@ const AuthForm = ({
           />
         ))}
         
-        {/* Add forgot password link here - appears after password field */}
-        {showForgotPassword && (
-          <div className="text-center">
+        {/* Show forgot password only when explicitly enabled and handler is provided */}
+        {showForgotPassword && onForgotPassword && (
+          <div className="text-right">
             <button
               type="button"
               onClick={onForgotPassword}
-              className="text-green-600 hover:text-green-700 font-medium text-sm transition-colors duration-200"
+              className="text-sm font-medium text-green-600 transition-colors duration-200 hover:text-green-700 hover:underline"
             >
               Forgot your password?
             </button>
@@ -64,8 +64,9 @@ const AuthForm = ({
           <p className="text-gray-600">
             {switchText.text}{' '}
             <button
+              type="button"
               onClick={switchAction}
-              className="text-green-600 hover:text-green-700 font-semibold transition-colors duration-200"
+              className="font-semibold text-green-600 transition-colors duration-200 hover:text-green-700 hover:underline"
             >
               {switchText.action}
             </button>

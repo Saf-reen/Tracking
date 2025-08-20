@@ -1,202 +1,88 @@
-// import React, { useState } from 'react';
-// import Header from '../components/Header';
-// import Footer from '../components/Footer';
-// import AuthForm from '../components/AuthForm';
-
-// const SignIn = ({ onNavigate }) => {
-//   const [formData, setFormData] = useState({
-//     email: '',
-//     password: ''
-//   });
-//   const [errors, setErrors] = useState({});
-
-//   const handleInputChange = (field) => (e) => {
-//     setFormData(prev => ({
-//       ...prev,
-//       [field]: e.target.value
-//     }));
-//     if (errors[field]) {
-//       setErrors(prev => ({
-//         ...prev,
-//         [field]: ''
-//       }));
-//     }
-//   };
-
-//   const validateForm = () => {
-//     const newErrors = {};
-    
-//     if (!formData.email.trim()) {
-//       newErrors.email = 'Email is required';
-//     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-//       newErrors.email = 'Please enter a valid email address';
-//     }
-    
-//     if (!formData.password) {
-//       newErrors.password = 'Password is required';
-//     }
-    
-//     return newErrors;
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const newErrors = validateForm();
-    
-//     if (Object.keys(newErrors).length === 0) {
-//       alert('Welcome back! Signed in successfully!');
-//       onNavigate('home');
-//     } else {
-//       setErrors(newErrors);
-//     }
-//   };
-
-//   const fields = [
-//     {
-//       name: 'email',
-//       label: 'Email Address',
-//       type: 'email',
-//       placeholder: 'Enter your email',
-//       value: formData.email,
-//       onChange: handleInputChange('email'),
-//       required: true,
-//       className: 'py-2 px-3 text-sm'
-//     },
-//     {
-//       name: 'password',
-//       label: 'Password',
-//       type: 'password',
-//       placeholder: 'Enter your password',
-//       value: formData.password,
-//       onChange: handleInputChange('password'),
-//       required: true,
-//       className: 'py-2 px-3 text-sm'
-//     }
-//   ];
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
-//       <Header onNavigate={onNavigate} />
-      
-//       <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
-//         <AuthForm
-//           title="Welcome Back"
-//           fields={fields}
-//           onSubmit={handleSubmit}
-//           submitText="Sign In"
-//           switchText={{
-//             text: "Don't have an account?",
-//             action: "Sign Up"
-//           }}
-//           switchAction={() => onNavigate('signup')}
-//           errors={errors}
-//         />
-//       </main>
-      
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default SignIn;
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { useDispatch } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure } from '../redux/authSlice';
+import axiosInstance from '../utils/axiosInstance';
+// import { API_ENDPOINTS } from '../utils/api';
 import AuthForm from '../components/AuthForm';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (field) => (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: ''
-      }));
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-    
-    return newErrors;
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    const newErrors = validateForm();
-    
-    if (Object.keys(newErrors).length === 0) {
-      alert('Welcome back! Signed in successfully!');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsLoading(true);
+    dispatch(loginStart());
+
+    try {
+      const response = await axiosInstance.post("/auth/login/", formData);
+      const { access_token, user } = response.data;
+      console.log(response.data);
+      dispatch(loginSuccess({ access_token, user }));
+      localStorage.setItem('access_token', access_token);
       navigate('/dashboard');
-    } else {
-      setErrors(newErrors);
+    } catch (error) {
+      dispatch(loginFailure(error.response?.data?.message || 'Login failed'));
+      setErrors({ general: error.response?.data?.message || 'Login failed' });
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fields = [
     {
       name: 'email',
-      label: 'Email Address',
       type: 'email',
-      placeholder: 'Enter your email',
+      placeholder: 'Email Address',
       value: formData.email,
-      onChange: handleInputChange('email'),
+      onChange: (e) => handleInputChange('email', e.target.value),
       required: true,
-      className: 'py-2 px-3 text-sm'
     },
     {
       name: 'password',
-      label: 'Password',
       type: 'password',
-      placeholder: 'Enter your password',
+      placeholder: 'Password',
       value: formData.password,
-      onChange: handleInputChange('password'),
+      onChange: (e) => handleInputChange('password', e.target.value),
       required: true,
-      className: 'py-2 px-3 text-sm'
-    }
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
-      <Header />
-      
-      <main className="flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
-        <AuthForm
-          title="Welcome Back"
-          fields={fields}
-          onSubmit={handleSubmit}
-          submitText="Sign In"
-          switchText={{
-            text: "Don't have an account?",
-            action: "Sign Up"
-          }}
-          switchAction={() => navigate('/signup')}
-          errors={errors}
-        />
-      </main>
-      
-      <Footer />
+    <div className="flex flex-col justify-center min-h-screen py-12 bg-gray-50 sm:px-6 lg:px-8">
+      <AuthForm
+        title="Sign In to Your Account"
+        fields={fields}
+        onSubmit={handleSubmit}
+        submitText={isLoading ? 'Signing In...' : 'Sign In'}
+        switchText={{ text: "Don't have an account?", action: 'Sign Up' }}
+        switchAction={() => navigate('/signup')}
+        showForgotPassword={true}
+        onForgotPassword={() => navigate('/forgot-password')}
+        errors={errors}
+      />
     </div>
   );
 };

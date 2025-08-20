@@ -1,38 +1,16 @@
+
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import Button from '../../components/Button';
-import Sidebar from "../../components/Sidebar";
-import Card from '../../components/Card';
-import {useState, React, useEffect} from "react";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Button from '../components/Button';
+import Card from '../components/Card';
 
 const Dashboard = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState('/dashboard');
   const navigate = useNavigate();
   console.log(navigate)
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-  const handleNavigation = (path) => {
-    setCurrentPath(path);
-    console.log('Navigating to:', path);
-    // Here you would integrate with react-router-dom's navigate function
-    // navigate(path);
-  };
-  const handleModuleNavigation = (path) => {
-    handleNavigation(path);
-  };
+
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Sidebar */}
-      <Sidebar 
-        isOpen={sidebarOpen}
-        toggleSidebar={toggleSidebar}
-        currentPath={currentPath}
-        onNavigate={handleNavigation}
-        isAuthenticated={true}
-      />
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <Header showNav={true} isAuthenticated={true}/>
       
@@ -114,7 +92,7 @@ const Dashboard = () => {
         {/* Getting Started Section */}
        
       </div>
-    </div>
+      <Footer />
     </div>
   );
 };

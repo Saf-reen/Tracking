@@ -1,202 +1,58 @@
-// import React, { useState } from 'react';
-// import Header from '../components/Header';
-// import Footer from '../components/Footer';
-// import AuthForm from '../components/AuthForm';
-// import Card from '../components/Card';
-
-// const SignUp = ({ onNavigate }) => {
-//   const [formData, setFormData] = useState({
-//     fullName: '',
-//     email: '',
-//     password: '',
-//     confirmPassword: ''
-//   });
-//   const [errors, setErrors] = useState({});
-
-//   const handleInputChange = (field) => (e) => {
-//     setFormData(prev => ({
-//       ...prev,
-//       [field]: e.target.value
-//     }));
-//     // Clear error when user starts typing
-//     if (errors[field]) {
-//       setErrors(prev => ({
-//         ...prev,
-//         [field]: ''
-//       }));
-//     }
-//   };
-
-//   const validateForm = () => {
-//     const newErrors = {};
-    
-//     if (!formData.fullName.trim()) {
-//       newErrors.fullName = 'Full name is required';
-//     }
-    
-//     if (!formData.email.trim()) {
-//       newErrors.email = 'Email is required';
-//     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-//       newErrors.email = 'Please enter a valid email address';
-//     }
-    
-//     if (!formData.password) {
-//       newErrors.password = 'Password is required';
-//     } else if (formData.password.length < 6) {
-//       newErrors.password = 'Password must be at least 6 characters';
-//     }
-    
-//     if (!formData.confirmPassword) {
-//       newErrors.confirmPassword = 'Please confirm your password';
-//     } else if (formData.password !== formData.confirmPassword) {
-//       newErrors.confirmPassword = 'Passwords do not match';
-//     }
-    
-//     return newErrors;
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const newErrors = validateForm();
-    
-//     if (Object.keys(newErrors).length === 0) {
-//       alert('Account created successfully! Welcome to TrackBudget!');
-//       onNavigate('home');
-//     } else {
-//       setErrors(newErrors);
-//     }
-//   };
-
-//   const fields = [
-//     {
-//       name: 'fullName',
-//       label: 'Full Name',
-//       placeholder: 'Enter your full name',
-//       value: formData.fullName,
-//       onChange: handleInputChange('fullName'),
-//       required: true
-//     },
-//     {
-//       name: 'email',
-//       label: 'Email Address',
-//       type: 'email',
-//       placeholder: 'Enter your email',
-//       value: formData.email,
-//       onChange: handleInputChange('email'),
-//       required: true
-//     },
-//     {
-//       name: 'password',
-//       label: 'Password',
-//       type: 'password',
-//       placeholder: 'Create a password',
-//       value: formData.password,
-//       onChange: handleInputChange('password'),
-//       required: true
-//     },
-//     {
-//       name: 'confirmPassword',
-//       label: 'Confirm Password',
-//       type: 'password',
-//       placeholder: 'Confirm your password',
-//       value: formData.confirmPassword,
-//       onChange: handleInputChange('confirmPassword'),
-//       required: true
-//     }
-//   ];
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
-//       <Header onNavigate={onNavigate} />
-      
-//       <main className="flex-1 flex items-center justify-center px-4 py-16">
-//         <AuthForm
-//           title="Create Account"
-//           fields={fields}
-//           onSubmit={handleSubmit}
-//           submitText="Create Account"
-//           switchText={{
-//             text: "Already have an account?",
-//             action: "Sign In"
-//           }}
-//           switchAction={() => onNavigate('signin')}
-//           errors={errors}
-//         />
-//       </main>
-      
-//       <Footer />
-//     </div>
-//   );
-// };
-
-// export default SignUp;
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../redux/authSlice';
+import axiosInstance from '../utils/axiosInstance';
+// import { API_ENDPOINTS } from '../utils/api';
 import AuthForm from '../components/AuthForm';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (field) => (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-    // Clear error when user starts typing
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
-        [field]: ''
-      }));
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = 'Passwords do not match';
-    }
-    
     return newErrors;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = validateForm();
-    
-    if (Object.keys(newErrors).length === 0) {
-      alert('Account created successfully! Welcome to TrackBudget!');
-      navigate('/signin');
-    } else {
+    if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post("", {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+      });
+      const { access_token, user } = response.data;
+      dispatch(loginSuccess({ access_token, user }));
+      localStorage.setItem('access_token', access_token);
+      navigate('/dashboard');
+    } catch (error) {
+      setErrors({ general: error.response?.data?.message || 'Signup failed' });
     }
   };
 
@@ -207,7 +63,7 @@ const SignUp = () => {
       placeholder: 'Enter your full name',
       value: formData.fullName,
       onChange: handleInputChange('fullName'),
-      required: true
+      required: true,
     },
     {
       name: 'email',
@@ -216,7 +72,7 @@ const SignUp = () => {
       placeholder: 'Enter your email',
       value: formData.email,
       onChange: handleInputChange('email'),
-      required: true
+      required: true,
     },
     {
       name: 'password',
@@ -225,7 +81,7 @@ const SignUp = () => {
       placeholder: 'Create a password',
       value: formData.password,
       onChange: handleInputChange('password'),
-      required: true
+      required: true,
     },
     {
       name: 'confirmPassword',
@@ -234,30 +90,22 @@ const SignUp = () => {
       placeholder: 'Confirm your password',
       value: formData.confirmPassword,
       onChange: handleInputChange('confirmPassword'),
-      required: true
-    }
+      required: true,
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 flex flex-col">
-      <Header />
-      
-      <main className="flex-1 flex items-center justify-center px-4 py-16">
-        <AuthForm
-          title="Create Account"
-          fields={fields}
-          onSubmit={handleSubmit}
-          submitText="Create Account"
-          switchText={{
-            text: "Already have an account?",
-            action: "Sign In"
-          }}
-          switchAction={() => navigate('/signin')}
-          errors={errors}
-        />
-      </main>
-      
-      <Footer />
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+      <AuthForm
+        title="Create Account"
+        showForgotPassword={false}
+        fields={fields}
+        onSubmit={handleSubmit}
+        submitText="Create Account"
+        switchText={{ text: 'Already have an account?', action: 'Sign In' }}
+        switchAction={() => navigate('/signin')}
+        errors={errors}
+      />
     </div>
   );
 };
